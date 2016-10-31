@@ -26,7 +26,7 @@ To get started,
 
 (2) Run the command ":load Ethereum.ml"
 
-	# :load Ethereum.ml
+    # :load Ethereum.ml
 
 (3) The system will then process the Imandra EVM model, and should end with a message 
     similar to the following:
@@ -54,34 +54,35 @@ To get started,
     - Defining custom measure function (measure_run)...Success
     Function run staged to depth 10000.
     - Finished loading $imandra/contracts/EVM/Ethereum.ml.
-    ----------------------------------------------------------------------------	# 
+    ----------------------------------------------------------------------------
+    #
 
 
 (4) Interactively create EVM machine states poised with the bytecode you wish
     to analyse. For example:
 
-  # let c1 =
-     Z.([ Push [0];
-          CallDataLoad;
-          SLoad;
-          IsZero;
-          Push [9];
-          JumpI;
-          Stop;
-          JumpDest;
-          Push [32];
-          CallDataLoad;
-          Push [0];
-          CallDataLoad;
-          SStore ]);;
+    # let c1 =
+       Z.([ Push [0];
+            CallDataLoad;
+            SLoad;
+            IsZero;
+            Push [9];
+            JumpI;
+            Stop;
+            JumpDest;
+            Push [32];
+            CallDataLoad;
+            Push [0];
+            CallDataLoad;
+            SStore ]);;
 
-  # let s1 = init_state Z.([],
-                           [],
-                           c1,
-                           100,
-                           mk_basic_msg ({ fun_selector = None;
-                                           call_args    = [54; 2020202020] }),
-                           empty_ext);;
+    # let s1 = init_state Z.([],
+                             [],
+                             c1,
+                             100,
+                             mk_basic_msg ({ fun_selector = None;
+                                             call_args    = [54; 2020202020] }),
+                             empty_ext);;
 
 
 (5) Use Imandra to analyse the bytecode with respect to the EVM semantics.
@@ -89,24 +90,24 @@ To get started,
     respect to arbitrary symbolic storage values and 15 clock cycles:
 
 
-	# let run_15_sym_storage x = run({s1 with storage = x}, 15);;
+    # let run_15_sym_storage x = run({s1 with storage = x}, 15);;
 
-	# :decompose run_15_sym_storage
+    # :decompose run_15_sym_storage
 
 
 (6) Finally, you can use Imandra interactively to step through possible
     symbolic executions, and to investigate and prove theorems about EVM bytecode:
 
 
-  # theorem c1_correct_1 (x, k, v, v_new : storage * _ * _ * _) =
-     Z.(valid_word k && valid_word v_new &&
-        get_storage(k,x) = v && v <> 0)
-          ==>
-          let init_state = { s1 with storage = x;
-                                     msg     = { s1.msg with
-                                                 msg_data = { fun_selector = None;
-                                                              call_args    = [k; v_new] }}} in
-          get_storage(k, (run (init_state, 15)).storage) = v;;
+    # theorem c1_correct_1 (x, k, v, v_new : storage * _ * _ * _) =
+       Z.(valid_word k && valid_word v_new &&
+          get_storage(k,x) = v && v <> 0)
+            ==>
+            let init_state = { s1 with storage = x;
+                                       msg     = { s1.msg with
+                                                   msg_data = { fun_selector = None;
+                                                                call_args    = [k; v_new] }}} in
+            get_storage(k, (run (init_state, 15)).storage) = v;;
 
 
 =====
