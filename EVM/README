@@ -1,0 +1,116 @@
+=====================================================================
+ A formal model of the Ethereum Virtual Machine in ImandraML
+ (c)Copyright Aesthetic Integration, Ltd., 2016
+ All rights reserved.
+                     
+ Released under Apache 2.0 license as described in the file LICENSE.
+
+ Contributors:
+  Grant Olney Passmore (grant@aestheticintegration.com)
+=====================================================================
+
+To get started, 
+
+(1) Login to Imandra Contracts and bring up an Imandra interactive session: 
+
+	$ imandra
+	            .__      /\ .__                           .___
+	     _____  |__|    / / |__| _____ _____    ____    __| _/___________
+	     \__  \ |  |   / /  |  |/     \__   \  /    \  / __ |\_  __ \__  \
+	      / __ \|  |  / /   |  |  Y Y  \/ __ \|   |  \/ /_/ | |  | \// __ \_
+	     (____  /__| / /    |__|__|_|  (____  /___|  /\____ | |__|  (____  /
+	          \/     \/              \/     \/     \/      \/            \/
+	----------------------------------------------------------------------------
+	 Imandra Commander 0.8a88 - (c)Copyright Aesthetic Integration Ltd, 2014-16
+	----------------------------------------------------------------------------
+
+(2) Run the command ":load Ethereum.ml"
+
+	# :load Ethereum.ml
+
+(3) The system will then process the Imandra EVM model, and should end with a message 
+    similar to the following:
+
+        .
+        .
+        .
+    val exec_Difficulty : state -> state = <fun>
+    val exec_Suicide : state -> state = <fun>
+    val exec_Log : state * int -> state = <fun>
+    val exec_ExtCodeSize : state -> state = <fun>
+    val exec_CallDataCopy : state -> state = <fun>
+    val exec_CodeCopy : state -> state = <fun>
+    val exec_ExtCodeCopy : state -> state = <fun>
+    val exec_Create : state -> state = <fun>
+    val exec_Call : state -> state = <fun>
+    val exec_CallCode : state -> state = <fun>
+    val exec_DelegateCall : state -> state = <fun>
+    - Finished loading $imandra/contracts/EVM/Semantics.ml.
+    ----------------------------------------------------------------------------
+    val next_inst : state -> instruction = <fun>
+    val do_inst : state * instruction -> state = <fun>
+    val step : state -> state = <fun>
+    val run : state * int -> state = <fun>
+    - Defining custom measure function (measure_run)...Success
+    Function run staged to depth 10000.
+    - Finished loading $imandra/contracts/EVM/Ethereum.ml.
+    ----------------------------------------------------------------------------	# 
+
+
+(4) Interactively create EVM machine states poised with the bytecode you wish
+    to analyse. For example:
+
+  # let c1 =
+     Z.([ Push [0];
+          CallDataLoad;
+          SLoad;
+          IsZero;
+          Push [9];
+          JumpI;
+          Stop;
+          JumpDest;
+          Push [32];
+          CallDataLoad;
+          Push [0];
+          CallDataLoad;
+          SStore ]);;
+
+  # let s1 = init_state Z.([],
+                           [],
+                           c1,
+                           100,
+                           mk_basic_msg ({ fun_selector = None;
+                                           call_args    = [54; 2020202020] }),
+                           empty_ext);;
+
+
+(5) Use Imandra to analyse the bytecode with respect to the EVM semantics.
+    For example, to perform a `principal region decomposition' on s1 with
+    respect to arbitrary symbolic storage values and 15 clock cycles:
+
+
+	# let run_15_sym_storage x = run({s1 with storage = x}, 15);;
+
+	# :decompose run_15_sym_storage
+
+
+(6) Finally, you can use Imandra interactively to step through possible
+    symbolic executions, and to investigate and prove theorems about EVM bytecode:
+
+
+  # theorem c1_correct_1 (x, k, v, v_new : storage * _ * _ * _) =
+     Z.(valid_word k && valid_word v_new &&
+        get_storage(k,x) = v && v <> 0)
+          ==>
+          let init_state = { s1 with storage = x;
+                                     msg     = { s1.msg with
+                                                 msg_data = { fun_selector = None;
+                                                              call_args    = [k; v_new] }}} in
+          get_storage(k, (run (init_state, 15)).storage) = v;;
+
+
+=====
+
+Learn more at the Imandra Developers Hub: http://docs.imandra.ai/ !
+
+

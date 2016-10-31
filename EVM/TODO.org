@@ -1,0 +1,12 @@
+* TODO:
+** TODO Extend memory model for reads/writes not at word boundaries (a mod 32 <> 0) 
+** TODO Proper gas calculations for CREATE instructions (nested mem_extend_ok's)
+** TODO Update gas calculations for Oct/Nov, 2016 hard fork(s)
+** TODO Proper behaviour (failure) when JUMP* destination invalid 
+** TODO Copy proper memory subsequences from *CALL* results
+** TODO Check CodeSize (and ExtCodeSize) computation -- is it # of instructions? # of bytes? 
+** TODO Implement SHA3 in logic: currently it's an uninterpreted function
+** TODO Implement SStore refund semantics 
+** TODO Overflow semantics for program counter increment (s.pc + 1 when s.pc = max_word)?
+Currently, we treat s.pc as arbitrary precision.
+This is a moot point in practice, but we should clarify w.r.t. official semantics.
