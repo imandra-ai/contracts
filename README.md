@@ -1,6 +1,6 @@
 # Imandra Contracts
 
-![Imandra Contracts](media/ic-logo.png "Imandra Contracts")
+![Imandra Contracts](media/ic_logo.png "Imandra Contracts")
 
 Imandra Contracts is a platform for analysing and reasoning about smart contracts, built on top of the Imandra formal verification system.
 
