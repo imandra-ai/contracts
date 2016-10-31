@@ -76,7 +76,8 @@ let init_call_state (s, m) =
     msg = m;
     gas = m.msg_gas;
     program = program;
-    memory = empty_mem }
+    memory = empty_mem;
+    pending_call = None }
 ;;
 
 (* Merge final state of call with parent state *)
