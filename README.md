@@ -15,7 +15,7 @@ This model provides an *operational executable semantics* for the EVM, empowerin
 
 ### Resources
 
-For a quick example, see EVM/README. For more, see [docs.imandra.ai](docs.imandra.ai "Imandra documentation").
+For a quick example, see EVM/README. For more, see [http://docs.imandra.ai](docs.imandra.ai "Imandra documentation").
 
 ### Get Involved
 
