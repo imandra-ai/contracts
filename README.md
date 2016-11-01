@@ -11,7 +11,7 @@ These models customise Imandra for reasoning about various classes of smart cont
 ### Ethereum 
 
 Our first community model is an Imandra model of the Ethereum Virtual Machine (EVM).
-This model provides an *operational executable semantics* for the EVM, empowering Imandra to reason about Ethereum bytecode.
+This model provides an *executable operational semantics* for the EVM, empowering Imandra to reason about Ethereum bytecode.
 
 ### Resources
 
